@@ -25,3 +25,39 @@ function addWallet(email, amount) { const account = state.accounts.find(item => 
 function showToast(message) { const toast = document.querySelector("#toast"); toast.textContent = message; toast.classList.add("show"); setTimeout(() => toast.classList.remove("show"), 2400); }
 function currentRole() { return state.account?.role || null; }
 function isLoggedIn() { return Boolean(state.account); }
+
+function navigate(route) {
+  if (["catalog", "orders", "profile"].includes(route) && !isLoggedIn()) { openAuth("login"); showToast("Please log in to open your workspace."); return; }
+  document.querySelectorAll(".view").forEach(view => view.classList.remove("active-view"));
+  document.querySelector(`#${route}-view`).classList.add("active-view");
+  if (route === "catalog") renderCatalog();
+  if (route === "orders") renderOrders();
+  if (route === "profile") renderProfile();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+function openAuth(mode = "signup", role = "reseller") { authMode = mode; selectedRole = role; document.querySelector("#auth-modal").classList.remove("hidden"); updateAuthModal(); }
+function closeModals() { document.querySelectorAll(".modal-backdrop").forEach(modal => modal.classList.add("hidden")); }
+function updateAuthModal() {
+  const signup = authMode === "signup";
+  document.querySelector("#auth-title").textContent = signup ? "Create your workspace." : "Welcome back to SupplyMate.";
+  document.querySelector("#auth-copy").textContent = signup ? "Choose your role and start exploring the demo platform." : "Log in with the local demo account you created.";
+  document.querySelector("#name-field").classList.toggle("hidden", !signup);
+  document.querySelectorAll("[data-auth-mode]").forEach(button => button.classList.toggle("selected", button.dataset.authMode === authMode));
+  document.querySelectorAll("[data-role-choice]").forEach(button => button.classList.toggle("selected", button.dataset.roleChoice === selectedRole));
+}
+function handleAuth(event) {
+  event.preventDefault();
+  const name = document.querySelector("#name-input").value.trim();
+  const email = document.querySelector("#email-input").value.trim().toLowerCase();
+  const password = document.querySelector("#password-input").value;
+  if (authMode === "signup") {
+    if (name.length < 2 || password.length < 6) return showToast("Use a name and password with at least 6 characters.");
+    if (state.accounts.some(account => account.email === email)) return showToast("An account with this email already exists.");
+    const account = { name, email, password, role: selectedRole, wallet: selectedRole === "reseller" ? 250 : 0 };
+    state.accounts.push(account); state.account = { name, email, role: selectedRole }; saveState(); closeModals(); refreshShell(); navigate(selectedRole === "reseller" ? "catalog" : "orders"); showToast(`Welcome, ${name}. Your ${selectedRole} workspace is ready.`);
+  } else {
+    const account = state.accounts.find(item => item.email === email && item.password === password);
+    if (!account) return showToast("Email or password does not match a local account.");
+    state.account = { name: account.name, email: account.email, role: account.role }; saveState(); closeModals(); refreshShell(); navigate(account.role === "reseller" ? "catalog" : "orders"); showToast("You are logged in.");
+  }
+}
