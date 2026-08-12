@@ -1,11 +1,36 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SupplyMate</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="SupplyMate connects wholesalers and resellers in one simple workspace." />
+  <title>SupplyMate | Source better. Sell smarter.</title>
+  <link rel="stylesheet" href="./style.css" />
 </head>
 <body>
-    
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <header class="site-header">
+    <a class="brand" href="#home" data-route="home"><span class="brand-mark">✦</span><span>SupplyMate</span></a>
+    <nav class="main-nav" aria-label="Primary navigation">
+      <button data-route="home">Home</button>
+      <button data-route="catalog">Discover</button>
+      <button data-route="orders">Orders</button>
+      <button data-route="profile">Wallet</button>
+    </nav>
+    <div class="header-actions">
+      <span id="wallet-pill" class="wallet-pill">Demo wallet: $250.00</span>
+      <button id="auth-button" class="button button-outline">Log in</button>
+    </div>
+  </header>
+
+  
+  <div id="auth-modal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="auth-title">
+    <div class="modal-card auth-card"><button class="modal-close" data-close-modal>×</button><span class="eyebrow">SupplyMate access</span><h2 id="auth-title">Create your workspace.</h2><p id="auth-copy">Choose your role and start exploring the demo platform.</p><div class="auth-tabs"><button data-auth-mode="login">Log in</button><button data-auth-mode="signup" class="selected">Sign up</button></div><form id="auth-form"><label id="name-field">Full name<input id="name-input" required minlength="2" placeholder="Maya Chen" /></label><label>Email<input id="email-input" required type="email" placeholder="maya@example.com" /></label><label>Password<input id="password-input" required minlength="6" type="password" placeholder="At least 6 characters" /></label><div class="role-selector"><button type="button" data-role-choice="reseller" class="role-choice selected">Reseller<span>Browse, price and order</span></button><button type="button" data-role-choice="wholesaler" class="role-choice">Wholesaler<span>Publish and fulfil</span></button></div><button class="button button-primary full-width" type="submit">Continue to SupplyMate →</button></form><p class="demo-note">This standalone version uses localStorage for demo accounts. It is designed to run through VS Code Live Server.</p></div>
+  </div>
+
+  <div id="product-modal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="product-title"><div class="modal-card"><button class="modal-close" data-close-modal>×</button><span class="eyebrow">Wholesaler workspace</span><h2 id="product-title">Upload a product.</h2><form id="product-form"><label>Product name<input id="product-name" required placeholder="Linen Everyday Tote" /></label><div class="two-column"><label>Wholesale price<input id="product-price" required type="number" min="1" step="0.01" placeholder="18" /></label><label>Stock<input id="product-stock" required type="number" min="1" placeholder="50" /></label></div><label>Category<input id="product-category" required placeholder="Accessories" /></label><label>Image URL<input id="product-image" placeholder="https://images.unsplash.com/..." /></label><label>Description<textarea id="product-description" rows="3" placeholder="A short product description"></textarea></label><button class="button button-primary full-width" type="submit">Save product</button></form></div></div>
+
+  <script src="./app.js" defer></script>
 </body>
 </html>
